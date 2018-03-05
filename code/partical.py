@@ -10,6 +10,8 @@ class partical(object):
         self.id = id
         self.m = m
         return
+    def get_mG(self):
+        return 0.01
     def get_info(self):
         loc = [self.x,self.y]
         v = [self.vx,self.vy]
@@ -29,15 +31,26 @@ class partical(object):
     def cal_E(self):
         # calculate the partical's energy
         return self.cal_Ek() + self.cal_Ep()
-    def update_state_RK(self,dt):
+    def update_state_RK(self,dt,system_info):
         # update the partical state from "t0" to "t0 + dt"
         # using Runge-Kutta method
+        # system info is a dic: key is particle id and value is [mass*G,loc]
         def F(Y):
             rr,vv = Y
             rx,ry = rr
             norm_rr = math.sqrt(rx**2+ry**2)
             r_rr = vv
             r_vv = -rr/(norm_rr**3)
+            for p_id in system_info.keys():
+                if p_id == self.id:
+                    continue
+                else:
+                    mG,loc = system_info[p_id]
+                    loc = np.array(loc)
+                    tmp_rr = rr - loc
+                    tmp_rx,tmp_ry = tmp_rr
+                    tmp_norm_rr = math.sqrt(tmp_rx ** 2 + tmp_ry ** 2)
+                    r_vv = r_vv - mG*tmp_rr / (tmp_norm_rr ** 3)
             return np.array([r_rr,r_vv])
 
         self.cal_r()
