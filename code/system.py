@@ -136,8 +136,8 @@ sys = star_system(2,[2,2.1])
 tot_time_step = 10000
 for tmp_step in range(tot_time_step):
     sys.update_particals()
-    # if tmp_step % 2000 == 0:
-    #     sys.draw_trace()
+    if tmp_step % 500 == 0:
+        sys.draw_trace()
     # if tmp_step % 600 == 0:
     #     sys.clear_trace()
 sys.draw_trace()
